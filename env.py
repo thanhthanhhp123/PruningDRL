@@ -61,31 +61,22 @@ class PruningEnv(object):
             reward -= 1
         return reward
     
-    def __terminate(self, observation):
-        if isinstance(observation, dict):
-            if observation['flops'] < 0:
-                return True
-            if observation['acc'] < 0.5:
-                return True
-            if observation['sparsity'] > 0.5:
-                return True
-            if observation['inference_time'] < 0:
-                return True
-            if observation['size'] < 0:
-                return True
-            return False
-        else:
-            if observation[0] < 0:
-                return True
-            if observation[1] < 0.5:
-                return True
-            if observation[2] > 0.5:
-                return True
-            if observation[3] < 0:
-                return True
-            if observation[4] < 0:
-                return True
-            return False
+    def __terminate(self, current_observation, new_observation):
+        '''
+        Acc:  0.9581
+        Infer time:  0.0
+        Sparsity:  0.0
+        FLOPs:  101632.0
+        Model size:  0.38823699951171875
+        '''
+        if current_observation['acc'] - new_observation[1] < 0.:
+            return True
+        if current_observation['inference_time'] < new_observation[3]:
+            return True
+        if current_observation['size'] >= new_observation[4]:
+            return True
+        return False
+
 
 
     def get_state(self):
@@ -97,18 +88,14 @@ class PruningEnv(object):
         if action == 0:
             return self.get_state(), \
                 self.__calculate_reward(self.__get_observation(), self.get_state()), \
-                self.__terminate(self.__get_observation())
+                self.__terminate(self.__get_observation(), self.get_state())
         elif action == 1:
             remove_random_weight(self.model)
             return self.get_state(), \
                 self.__calculate_reward(self.__get_observation(), self.get_state()), \
-                self.__terminate(self.__get_observation())
+                self.__terminate(self.__get_observation(), self.get_state())
                     
         
-        # state = self.get_state()
-        # reward = self.__calculate_reward(self.__get_observation(), state)
-        # done = self.__terminate(state)
-        # return state, reward, done
     
     def render(self):
         pass
