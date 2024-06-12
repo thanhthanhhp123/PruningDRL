@@ -82,7 +82,7 @@ class Agent():
                 if done:
                     break
             self.target_net.load_state_dict(self.policy_net.state_dict())
-            print(f'Episode {episode + 1}, Reward = {reward}, Observations = {self.env.get_observation()}')
+            print(f'Episode {episode + 1}, Reward = {reward.values()}, Observations = {self.env.get_observation()}')
             self.save('prunedmodel/pruned_model.pth', 'prunedmodel/dqn.pth')
         print('Training complete')
     
