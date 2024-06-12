@@ -4,6 +4,10 @@ import torchprofile
 import random
 from thop import profile
 import time
+import logging
+
+logging.getLogger().setLevel(logging.WARNING)
+
 
 
 def measure_flops(model,device, input_size = (1, 1, 784)):

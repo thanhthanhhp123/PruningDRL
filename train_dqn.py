@@ -8,7 +8,8 @@ from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
 
 import logging
-logging.basicConfig(level=logging.ERROR)
+logging.getLogger().setLevel(logging.WARNING)
+
 
 
 train_loader = torch.utils.data.DataLoader(MNIST('data', train = True, download = False, transform = ToTensor()), batch_size = 64, shuffle = True)
